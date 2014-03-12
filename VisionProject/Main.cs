@@ -60,6 +60,7 @@ namespace VisionProject
             g.Dispose();
             pictureBox1.Image = grayImage;
             this.button3.Visible = true;
+            this.button4.Visible = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -81,6 +82,16 @@ namespace VisionProject
         private void Main_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Bitmap Image (.bmp)|*.bmp|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                grayImage.Save(dialog.FileName);
+            }
         }
     }
 }
