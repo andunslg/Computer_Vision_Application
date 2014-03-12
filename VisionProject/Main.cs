@@ -5,12 +5,14 @@ using System.Drawing.Imaging;
 
 namespace VisionProject
 {
-    public partial class Form1 : Form
+    public partial class Main : Form
     {
         
         Bitmap image;
         Bitmap grayImage;
-        public Form1()
+
+
+        public Main()
         {
             InitializeComponent();
         }
@@ -28,7 +30,7 @@ namespace VisionProject
                     image = new Bitmap(dlg.FileName);
                     pictureBox1.Image = image;
 
-                    this.Controls.Add(pictureBox1);
+                    this.button2.Visible = true;
                 }
             }
         }
@@ -57,6 +59,28 @@ namespace VisionProject
             //dispose the Graphics object
             g.Dispose();
             pictureBox1.Image = grayImage;
+            this.button3.Visible = true;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+            
+            long[] myHistogram = new long[256];
+            for (int i = 0 ; i < grayImage.Size.Width; i++)
+                for (int j = 0 ; j < grayImage.Size.Height; j++)
+                {
+                    System.Drawing.Color c = grayImage.GetPixel(i, j);
+                    long Temp = 0;
+                    Temp += c.R;
+                    myHistogram[Temp]++;
+                }
+            this.histogramaDesenat1.DrawHistogram(myHistogram);
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

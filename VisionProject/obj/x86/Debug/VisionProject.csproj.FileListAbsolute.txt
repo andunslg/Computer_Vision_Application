@@ -1,0 +1,16 @@
+c:\users\andunslg\documents\visual studio 2010\Projects\VisionProject\VisionProject\bin\Debug\VisionProject.exe
+c:\users\andunslg\documents\visual studio 2010\Projects\VisionProject\VisionProject\bin\Debug\VisionProject.pdb
+c:\users\andunslg\documents\visual studio 2010\Projects\VisionProject\VisionProject\obj\x86\Debug\VisionProject.Form1.resources
+c:\users\andunslg\documents\visual studio 2010\Projects\VisionProject\VisionProject\obj\x86\Debug\VisionProject.Properties.Resources.resources
+c:\users\andunslg\documents\visual studio 2010\Projects\VisionProject\VisionProject\obj\x86\Debug\VisionProject.csproj.GenerateResource.Cache
+c:\users\andunslg\documents\visual studio 2010\Projects\VisionProject\VisionProject\obj\x86\Debug\VisionProject.exe
+c:\users\andunslg\documents\visual studio 2010\Projects\VisionProject\VisionProject\obj\x86\Debug\VisionProject.pdb
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.exe
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.pdb
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\bin\Debug\VisionProject.exe
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\bin\Debug\VisionProject.pdb
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.Properties.Resources.resources
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.csproj.GenerateResource.Cache
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.csprojResolveAssemblyReference.cache
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.Main.resources
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.HistogramaDesenat.resources
