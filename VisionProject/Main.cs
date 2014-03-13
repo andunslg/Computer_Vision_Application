@@ -13,6 +13,10 @@ namespace VisionProject
         Bitmap originalImage;
         Bitmap grayImage;
 
+        Bitmap secondOrginalImage;
+        Bitmap secondGrayImage;
+
+        Bitmap comparisonImage;
 
         public Main()
         {
@@ -66,6 +70,7 @@ namespace VisionProject
             this.button4.Visible = true;
             this.button5.Visible = true;
             this.button8.Visible = true;
+            this.button10.Visible = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -200,6 +205,61 @@ namespace VisionProject
             this.comboBox4.SelectedIndex = 0;
             this.label4.Visible = true;
             this.button7.Visible = true;
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            this.button11.Visible = true;
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            this.pictureBox1.Image = grayImage;
+
+            using (OpenFileDialog dlg = new OpenFileDialog())
+            {
+                dlg.Title = "Open Image";
+                dlg.Filter = "Files (*.bmp.*.jpeg,*.png,*.jpg)|*.bmp;*.jpeg;*.png;*.jpg";
+
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    secondOrginalImage = new Bitmap(dlg.FileName);
+                }
+            }
+
+            //make an empty bitmap the same size as original
+            secondGrayImage = new Bitmap(secondOrginalImage.Width, secondOrginalImage.Height);
+
+            //get a graphics object from the new image
+            Graphics g = Graphics.FromImage(secondGrayImage);
+            //create the grayscale ColorMatrix
+            ColorMatrix colorMatrix = new ColorMatrix(new float[][]{
+                new float[]{.3f, .3f, .3f,0,0},
+                new float[]{.59f, .59f, .59f,0,0},
+                new float[]{.11f, .11f, .11f,0,0},
+                new float[]{0,0,0,1,0},
+                new float[]{0,0,0,0,1}});
+            //create some image attributes
+            ImageAttributes attributes = new ImageAttributes();
+            //set the color matrix attribute
+            attributes.SetColorMatrix(colorMatrix);
+            //draw the original image on the new image
+            //using the grayscale color matrix
+            g.DrawImage(secondOrginalImage, new Rectangle(0, 0, secondOrginalImage.Width, secondOrginalImage.Height), 0, 0, secondOrginalImage.Width, secondOrginalImage.Height, GraphicsUnit.Pixel, attributes);
+            //dispose the Graphics object
+            g.Dispose();
+
+            this.pictureBox2.Image = secondGrayImage;
+
+            this.button12.Visible = true;
+
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            comparisonImage = ArithmeticBlend(grayImage, secondGrayImage, ColorCalculator.ColorCalculationType.Difference);
+            this.pictureBox3.Image = comparisonImage;
+            button9.Visible = true;
         }
 
 
@@ -985,6 +1045,49 @@ namespace VisionProject
 
             return resultBitmap;
         }
+        public Bitmap ArithmeticBlend(Bitmap sourceBitmap, Bitmap blendBitmap,
+                                     ColorCalculator.ColorCalculationType calculationType)
+        {
+            BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0,
+                                    sourceBitmap.Width, sourceBitmap.Height),
+                                    ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
+            Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
+            sourceBitmap.UnlockBits(sourceData);
+
+            BitmapData blendData = blendBitmap.LockBits(new Rectangle(0, 0,
+                                    blendBitmap.Width, blendBitmap.Height),
+                                    ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            byte[] blendBuffer = new byte[blendData.Stride * blendData.Height];
+            Marshal.Copy(blendData.Scan0, blendBuffer, 0, blendBuffer.Length);
+            blendBitmap.UnlockBits(blendData);
+
+            for (int k = 0; (k + 4 < pixelBuffer.Length) &&
+                            (k + 4 < blendBuffer.Length); k += 4)
+            {
+                pixelBuffer[k] = ColorCalculator.Calculate(pixelBuffer[k],
+                                 blendBuffer[k], calculationType);
+
+                pixelBuffer[k + 1] = ColorCalculator.Calculate(pixelBuffer[k + 1],
+                                     blendBuffer[k + 1], calculationType);
+
+                pixelBuffer[k + 2] = ColorCalculator.Calculate(pixelBuffer[k + 2],
+                                     blendBuffer[k + 2], calculationType);
+            }
+
+            Bitmap resultBitmap = new Bitmap(sourceBitmap.Width, sourceBitmap.Height);
+
+            BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0,
+                                    resultBitmap.Width, resultBitmap.Height),
+                                    ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            Marshal.Copy(pixelBuffer, 0, resultData.Scan0, pixelBuffer.Length);
+            resultBitmap.UnlockBits(resultData);
+
+            return resultBitmap;
+        }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -996,5 +1099,8 @@ namespace VisionProject
         {
         }
 
+      
+
+        
     }
 }
