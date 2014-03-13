@@ -58,9 +58,11 @@ namespace VisionProject
             g.DrawImage(image,new Rectangle(0,0, image.Width, image.Height),0,0, image.Width, image.Height,GraphicsUnit.Pixel, attributes);
             //dispose the Graphics object
             g.Dispose();
-            pictureBox1.Image = grayImage;
+            pictureBox2.Image = grayImage;
+
             this.button3.Visible = true;
             this.button4.Visible = true;
+            this.button5.Visible = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -93,5 +95,512 @@ namespace VisionProject
                 grayImage.Save(dialog.FileName);
             }
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            this.label1.Visible = true;
+            this.label2.Visible = true;
+            this.comboBox1.Visible = true;
+            this.comboBox1.SelectedIndex = 0;
+            this.comboBox2.Visible = true;
+            this.comboBox2.SelectedIndex = 0;
+            this.button6.Visible = true;
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Bitmap img = grayImage;
+            Color pixelColor;
+
+            if (this.comboBox1.SelectedIndex == 0)
+            {
+                
+                for (int i = 0; i < img.Width; i++)
+                {
+                    for (int j = 0; j < img.Height; j++)
+                    {
+                        int total = 0;
+
+                        if (this.comboBox2.SelectedIndex == 0)
+                        {
+
+                            if (i - 1 >= 0 && j - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 1 >= 0 && i + 1 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 1 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 1 >= 0 && j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 1 < img.Width && j+1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            pixelColor = img.GetPixel(i, j);
+                            total += Convert.ToInt16(pixelColor.R);
+
+                            img.SetPixel(i, j, Color.FromArgb(total / 9, total / 9, total / 9));
+                        }
+
+                        if (this.comboBox2.SelectedIndex == 1)
+                        {
+
+                            if (i - 1 >= 0 && j - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 1 >= 0 && i + 1 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 1 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 1 >= 0 && j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 1 < img.Width && j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (i - 2 >= 0 && j - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j - 2);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 2 >= 0 && i + 2 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j - 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j -2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 2 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 2 >= 0 && j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i , j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 2 < img.Width && j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            pixelColor = img.GetPixel(i, j);
+                            total += Convert.ToInt16(pixelColor.R);
+
+                            img.SetPixel(i, j, Color.FromArgb(total / 25, total / 25, total / 25));
+                        }
+
+
+                        if (this.comboBox2.SelectedIndex == 2)
+                        {
+
+                            if (i - 1 >= 0 && j - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 1 >= 0 && i + 1 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 1 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 1 >= 0 && j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 1 < img.Width && j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (i - 2 >= 0 && j - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j - 2);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 2 >= 0 && i + 2 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j - 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 2 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 2 >= 0 && j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 2 < img.Width && j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (i - 3 >= 0 && j - 3 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 3, j - 3);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 3 >= 0 && i + 3 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 3, j - 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 3 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 3 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 3, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 3 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 3, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 3 >= 0 && j + 3 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 3, j + 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 3 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 3 < img.Width && j + 3 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 3, j + 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+
+                            pixelColor = img.GetPixel(i, j);
+                            total += Convert.ToInt16(pixelColor.R);
+
+                            img.SetPixel(i, j, Color.FromArgb(total / 49, total / 49, total / 49));
+                        }
+
+                        if (this.comboBox2.SelectedIndex == 3)
+                        {
+
+                            if (i - 1 >= 0 && j - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 1 >= 0 && i + 1 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 1 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 1 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 1 >= 0 && j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 1, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 1 < img.Width && j + 1 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 1, j + 1);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (i - 2 >= 0 && j - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j - 2);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 2 >= 0 && i + 2 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j - 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 2 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 2 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 2 >= 0 && j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 2, j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 2 < img.Width && j + 2 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 2, j + 2);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (i - 3 >= 0 && j - 3 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 3, j - 3);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 3 >= 0 && i + 3 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 3, j - 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 3 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 3 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 3, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 3 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 3, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 3 >= 0 && j + 3 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 3, j + 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 3 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 3 < img.Width && j + 3 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 3, j + 3);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (i - 4 >= 0 && j - 4 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 4, j - 4);
+                                total += Convert.ToInt16(pixelColor.R);
+
+                            }
+                            if (j - 4 >= 0 && i +4 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 4, j - 4);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            if (j - 4 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i, j - 4);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 4 < img.Width)
+                            {
+                                pixelColor = img.GetPixel(i + 4, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 4 >= 0)
+                            {
+                                pixelColor = img.GetPixel(i - 4, j);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i - 4 >= 0 && j + 4 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i - 4, j + 4);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (j + 4 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i, j + 4);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+                            if (i + 4 < img.Width && j + 4 < img.Height)
+                            {
+                                pixelColor = img.GetPixel(i + 4, j + 4);
+                                total += Convert.ToInt16(pixelColor.R);
+                            }
+
+                            pixelColor = img.GetPixel(i, j);
+                            total += Convert.ToInt16(pixelColor.R);
+
+                            img.SetPixel(i, j, Color.FromArgb(total / 81, total / 81, total / 81));
+                        }
+                    }
+                }
+            }
+            this.pictureBox3.Image = img;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+       
     }
 }
