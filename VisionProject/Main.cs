@@ -204,6 +204,27 @@ namespace VisionProject
                 
             }
 
+            else if (this.comboBox1.SelectedIndex == 3)
+            {
+                if (this.comboBox2.SelectedIndex == 0)
+                {
+                    this.pictureBox3.Image = AlphaTrimmedMeanFilter(img, 3, Convert.ToInt16(this.comboBox3.SelectedItem.ToString()));
+                }
+                else if (this.comboBox2.SelectedIndex == 1)
+                {
+                    this.pictureBox3.Image = AlphaTrimmedMeanFilter(img, 5, Convert.ToInt16(this.comboBox3.SelectedItem.ToString()));
+                }
+                else if (this.comboBox2.SelectedIndex == 2)
+                {
+                    this.pictureBox3.Image = AlphaTrimmedMeanFilter(img, 7, Convert.ToInt16(this.comboBox3.SelectedItem.ToString()));
+                }
+                else if (this.comboBox2.SelectedIndex == 3)
+                {
+                    this.pictureBox3.Image = AlphaTrimmedMeanFilter(img, 9, Convert.ToInt16(this.comboBox3.SelectedItem.ToString()));
+                }
+            }
+
+
             this.button9.Visible = true;
         }
 
@@ -358,65 +379,78 @@ namespace VisionProject
                 this.checkBox1.Enabled = false;
             }
 
+            if (comboBox1.SelectedIndex == 3)
+            {
+                this.comboBox3.Enabled = true;
+                this.comboBox3.SelectedIndex = 0;
+                this.label8.Enabled = true;
+            }
+            else
+            {
+                this.comboBox3.Enabled = false;
+                this.label8.Enabled = false;
+            }
+
+
         }
 
-      /*  public Bitmap AlphaTrimmedMeanFilter(Bitmap sourceBitmap,int matrixSize,int alpha)
+        public Bitmap AlphaTrimmedMeanFilter(Bitmap sourceBitmap,int matrixSize,int alpha)
         {
             Bitmap result = new Bitmap(sourceBitmap);
-           
-            //   Start of the trimmed ordered set
-           int start = alpha;
-           //   End of the trimmed ordered set
-           int end = 9 - alpha;
-           //   Move window through all elements of the image
-           for (int m = 1; m < sourceBitmap.Width; ++m)
-           {
-              for (int n = 1; n < sourceBitmap.Height; ++n)
-              {
-                 //   Pick up window elements
-                 int k = 0;
-                 int [] window= new int[9];
-                 for (int j = m - 1; j < m + 2; ++j)
-                 {
-                     for (int i = n - 1; i < n + 2; ++i)
-                     {
-                         if (j > 0 && j < sourceBitmap.Width && i > 0 && i < sourceBitmap.Height)
-                         {
-                             Color pixelColor = sourceBitmap.GetPixel(j, i);
-                             window[k++] = Convert.ToInt16(pixelColor.R);
-                         }
-                     }
-                 }
-                 //   Order elements (only necessary part of them)
-                 for (int j = 0; j < end; ++j)
-                 {
-                    //   Find position of minimum element
-                    int min = j;
-                    for (int l = j + 1; l < 9; ++l)
-                    {
-                        if (window[l] < window[min])
-                            min = l;
-                    }
-                    //   Put found minimum element in its place
-                    int temp = window[j];
-                    window[j] = window[min];
-                    window[min] = temp;
-                 }
 
-                 //   Get result - the mean value of the elements in trimmed set
-                 result.SetPixel(n - 1, m - 1, Color.FromArgb(window[start], window[start], window[start]));
-                 for (int j = start + 1; j < end; ++j)
-                 {
-                     result.SetPixel(n - 1, m - 1, Color.FromArgb(window[j], window[j], window[j]));
-                 }
-                 Color pixelColor1 = sourceBitmap.GetPixel(n - 1, m - 1);
-                 int tempColor = Convert.ToInt16(pixelColor1.R)/9;
-                 result.SetPixel(n - 1, m - 1, Color.FromArgb(tempColor,tempColor,tempColor));
-         
+            //   Start of the trimmed ordered set
+            int start = alpha;
+            //   End of the trimmed ordered set
+            int end = matrixSize * matrixSize - alpha;
+            //   Move window through all elements of the image
+            for (int m = 1; m < sourceBitmap.Width; m++)
+            {
+                for (int n = 1; n < sourceBitmap.Height; n++)
+                {
+                    //   Pick up window elements
+                    int k = 0;
+                    int[] window = new int[matrixSize * matrixSize];
+                    for (int j = m - (matrixSize / 2); j < m + ((matrixSize/2)+1); ++j)
+                    {
+                        for (int i = n - (matrixSize / 2); i < n +((matrixSize / 2) + 1); ++i)
+                        {
+                            if (j > 0 && j < sourceBitmap.Width && i > 0 && i < sourceBitmap.Height)
+                            {
+                                Color pixelColor = sourceBitmap.GetPixel(j, i);
+                                window[k++] = Convert.ToInt16(pixelColor.R);
+                            }
+                        }
+                    }
+                    //   Order elements (only necessary part of them)
+                    for (int j = 0; j < end; j++)
+                    {
+                        //   Find position of minimum element
+                        int min = j;
+                        for (int l = j + 1; l < matrixSize * matrixSize; l++)
+                        {
+                            if (window[l] < window[min])
+                                min = l;
+                        }
+                        //   Put found minimum element in its place
+                        int temp = window[j];
+                        window[j] = window[min];
+                        window[min] = temp;
+                    }
+
+                    int total = window[start];
+                    for (int j = start + 1; j < end; ++j)
+                    {
+                        total += window[j];
+                    }
+
+                    int tempColor = total /( matrixSize*matrixSize);
+
+                    result.SetPixel(m,n, Color.FromArgb(tempColor, tempColor, tempColor));
+
                 }
-           }
-             return result;
-        }*/
+            }
+            return result;
+        }
         
         public  Bitmap MedianFilter(Bitmap sourceBitmap,int matrixSize,int bias = 0, bool grayscale = true) 
         {
@@ -1240,9 +1274,9 @@ namespace VisionProject
                     int pixVal=Convert.ToInt16(pixelColor.R);
                     max=pixVal;
                     min = pixVal;
-                    for (int k = i - (matrixSize / 2); k < i + (matrixSize / 2); k++)
+                    for (int k = i - (matrixSize / 2); k <= i + (matrixSize / 2); k++)
                     {
-                        for (int l = j - (matrixSize / 2); l < j + (matrixSize / 2); l++)
+                        for (int l = j - (matrixSize / 2); l <= j + (matrixSize / 2); l++)
                         {
                             if (k > 0 && l > 0 && k < img.Width && l < img.Height)
                             {
@@ -1269,6 +1303,5 @@ namespace VisionProject
 
             return result;
         }
-
     }
 }
