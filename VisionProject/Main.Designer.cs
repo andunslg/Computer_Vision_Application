@@ -45,6 +45,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.button9 = new System.Windows.Forms.Button();
             this.histogramaDesenat1 = new VisionProject.HistogramaDesenat();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -94,9 +95,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(777, 33);
+            this.button4.Location = new System.Drawing.Point(517, 402);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 34);
+            this.button4.Size = new System.Drawing.Size(58, 29);
             this.button4.TabIndex = 5;
             this.button4.Text = "Save";
             this.button4.UseVisualStyleBackColor = true;
@@ -239,21 +240,33 @@
             this.comboBox4.Visible = false;
             this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.comboBox4_SelectedIndexChanged);
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(794, 402);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(58, 29);
+            this.button9.TabIndex = 21;
+            this.button9.Text = "Save";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Visible = false;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // histogramaDesenat1
             // 
             this.histogramaDesenat1.DisplayColor = System.Drawing.Color.Black;
             this.histogramaDesenat1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.histogramaDesenat1.Location = new System.Drawing.Point(306, 402);
+            this.histogramaDesenat1.Location = new System.Drawing.Point(206, 437);
             this.histogramaDesenat1.Name = "histogramaDesenat1";
             this.histogramaDesenat1.Offset = 20;
-            this.histogramaDesenat1.Size = new System.Drawing.Size(269, 200);
+            this.histogramaDesenat1.Size = new System.Drawing.Size(490, 200);
             this.histogramaDesenat1.TabIndex = 4;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(882, 630);
+            this.ClientSize = new System.Drawing.Size(882, 649);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button8);
@@ -303,6 +316,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Button button9;
     }
 }
 

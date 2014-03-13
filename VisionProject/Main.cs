@@ -95,7 +95,17 @@ namespace VisionProject
             dialog.Filter = "Bitmap Image (.bmp)|*.bmp|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                grayImage.Save(dialog.FileName);
+                pictureBox2.Image.Save(dialog.FileName);
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Bitmap Image (.bmp)|*.bmp|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox3.Image.Save(dialog.FileName);
             }
         }
 
@@ -151,7 +161,9 @@ namespace VisionProject
                 {
                     this.pictureBox3.Image = MedianFilter(img, 9);
                 }
-            }       
+            }
+
+            this.button9.Visible = true;
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -179,6 +191,7 @@ namespace VisionProject
             {
 
             }
+            this.button9.Visible = true;
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -982,5 +995,6 @@ namespace VisionProject
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
+
     }
 }
