@@ -36,7 +36,7 @@ namespace VisionProject
                     originalImage = new Bitmap(dlg.FileName);
                     pictureBox1.Image = originalImage;
 
-                    this.button2.Visible = true;
+                    this.button2.Enabled = true;
                 }
             }
         }
@@ -66,11 +66,23 @@ namespace VisionProject
             g.Dispose();
             pictureBox2.Image = grayImage;
 
-            this.button3.Visible = true;
-            this.button4.Visible = true;
-            this.button5.Visible = true;
-            this.button8.Visible = true;
-            this.button10.Visible = true;
+            this.button3.Enabled = true;
+            this.button4.Enabled = true;
+
+            this.label1.Enabled = true;
+            this.label2.Enabled = true;
+            this.comboBox1.Enabled = true;
+            this.comboBox1.SelectedIndex = 0;
+            this.comboBox2.Enabled = true;
+            this.comboBox2.SelectedIndex = 0;
+            this.button6.Enabled = true;
+
+            this.comboBox4.Enabled = true;
+            this.comboBox4.SelectedIndex = 0;
+            this.label4.Enabled = true;
+            this.button7.Enabled = true;
+            this.button11.Enabled = true;
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -112,18 +124,9 @@ namespace VisionProject
             {
                 pictureBox3.Image.Save(dialog.FileName);
             }
+            this.button9.Enabled = true;
         }
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            this.label1.Visible = true;
-            this.label2.Visible = true;
-            this.comboBox1.Visible = true;
-            this.comboBox1.SelectedIndex = 0;
-            this.comboBox2.Visible = true;
-            this.comboBox2.SelectedIndex = 0;
-            this.button6.Visible = true;
-        }
 
         private void button6_Click(object sender, EventArgs e)
         {
@@ -195,21 +198,34 @@ namespace VisionProject
             else if (this.comboBox4.SelectedIndex == 3)
             {
 
-            }
-            this.button9.Visible = true;
-        }
+                float TH, TL, Sigma;
+                int MaskSize;
 
-        private void button8_Click(object sender, EventArgs e)
-        {
-            this.comboBox4.Visible = true;
-            this.comboBox4.SelectedIndex = 0;
-            this.label4.Visible = true;
-            this.button7.Visible = true;
+                TH = (float)Convert.ToDouble(this.textBox1.Text);
+                TL = (float)Convert.ToDouble(this.textBox2.Text);
+
+                MaskSize = Convert.ToInt32(this.textBox3.Text);
+                Sigma = (float)Convert.ToDouble(this.textBox4.Text);
+
+                Canny CannyData = new Canny(grayImage, TH, TL, MaskSize, Sigma);
+
+                CannyData.DisplayImage(CannyData.NonMax);
+
+                CannyData.DisplayImage(CannyData.FilteredImage);
+
+                CannyData.DisplayImage(CannyData.GNL);
+
+                CannyData.DisplayImage(CannyData.GNH);
+
+                this.pictureBox3.Image = CannyData.DisplayImage(CannyData.EdgeMap);
+
+            }
+            this.button9.Enabled = true;
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
-            this.button11.Visible = true;
+            
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -251,7 +267,7 @@ namespace VisionProject
 
             this.pictureBox2.Image = secondGrayImage;
 
-            this.button12.Visible = true;
+            this.button12.Enabled = true;
 
         }
 
@@ -259,7 +275,7 @@ namespace VisionProject
         {
             comparisonImage = ArithmeticBlend(grayImage, secondGrayImage, ColorCalculator.ColorCalculationType.Difference);
             this.pictureBox3.Image = comparisonImage;
-            button9.Visible = true;
+            this.button9.Enabled = true;
         }
 
 
@@ -1097,10 +1113,32 @@ namespace VisionProject
         }
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (this.comboBox4.SelectedIndex == 3)
+            {
+                this.label3.Enabled = true;
+                this.label5.Enabled = true;
+                this.label6.Enabled = true;
+                this.label7.Enabled = true;
+
+                this.textBox1.Enabled = true;
+                this.textBox2.Enabled = true;
+                this.textBox3.Enabled = true;
+                this.textBox4.Enabled = true;
+            }
+            else
+            {
+                this.label3.Enabled = false;
+                this.label5.Enabled = false;
+                this.label6.Enabled = false;
+                this.label7.Enabled = false;
+
+                this.textBox1.Enabled = false;
+                this.textBox2.Enabled = false;
+                this.textBox3.Enabled = false;
+                this.textBox4.Enabled = false;
+            }
+
         }
-
-      
-
-        
+ 
     }
 }
