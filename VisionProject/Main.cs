@@ -2,13 +2,15 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace VisionProject
 {
     public partial class Main : Form
     {
         
-        Bitmap image;
+        Bitmap originalImage;
         Bitmap grayImage;
 
 
@@ -27,8 +29,8 @@ namespace VisionProject
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     PictureBox pictureBox1 = this.pictureBox1;
-                    image = new Bitmap(dlg.FileName);
-                    pictureBox1.Image = image;
+                    originalImage = new Bitmap(dlg.FileName);
+                    pictureBox1.Image = originalImage;
 
                     this.button2.Visible = true;
                 }
@@ -38,7 +40,7 @@ namespace VisionProject
         private void button2_Click(object sender, EventArgs e)
         {
             //make an empty bitmap the same size as original
-            grayImage = new Bitmap(image.Width, image.Height);
+            grayImage = new Bitmap(originalImage.Width, originalImage.Height);
 
             //get a graphics object from the new image
             Graphics g = Graphics.FromImage(grayImage);
@@ -55,7 +57,7 @@ namespace VisionProject
             attributes.SetColorMatrix(colorMatrix);
             //draw the original image on the new image
             //using the grayscale color matrix
-            g.DrawImage(image,new Rectangle(0,0, image.Width, image.Height),0,0, image.Width, image.Height,GraphicsUnit.Pixel, attributes);
+            g.DrawImage(originalImage,new Rectangle(0,0, originalImage.Width, originalImage.Height),0,0, originalImage.Width, originalImage.Height,GraphicsUnit.Pixel, attributes);
             //dispose the Graphics object
             g.Dispose();
             pictureBox2.Image = grayImage;
@@ -109,19 +111,170 @@ namespace VisionProject
 
         private void button6_Click(object sender, EventArgs e)
         {
-            Bitmap img = grayImage;
-            Color pixelColor;
+            Bitmap img = new Bitmap(grayImage);
 
             if (this.comboBox1.SelectedIndex == 0)
             {
-                
-                for (int i = 0; i < img.Width; i++)
+                if (this.comboBox2.SelectedIndex == 0)
+                {                  
+                    this.pictureBox3.Image = MeanFilter(img, 3);
+                }
+                else if (this.comboBox2.SelectedIndex == 1)
+                {
+                    this.pictureBox3.Image = MeanFilter(img, 5);
+                }
+                else if (this.comboBox2.SelectedIndex == 2)
+                {
+                    this.pictureBox3.Image = MeanFilter(img, 7);
+                }
+                else if (this.comboBox2.SelectedIndex == 3)
+                {
+                    this.pictureBox3.Image = MeanFilter(img, 9);
+                }
+            }
+            else if (this.comboBox1.SelectedIndex == 1)
+            {
+                if (this.comboBox2.SelectedIndex == 0)
+                {
+                    this.pictureBox3.Image = MedianFilter(img, 3);
+                }
+                else if (this.comboBox2.SelectedIndex == 1)
+                {
+                    this.pictureBox3.Image = MedianFilter(img, 5);
+                }
+                else if (this.comboBox2.SelectedIndex == 2)
+                {
+                    this.pictureBox3.Image = MedianFilter(img, 7);
+                }
+                else if (this.comboBox2.SelectedIndex == 3)
+                {
+                    this.pictureBox3.Image = MedianFilter(img, 9);
+                }
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        public  Bitmap MedianFilter(Bitmap sourceBitmap, 
+                                                int matrixSize,  
+                                                  int bias = 0, 
+                                         bool grayscale = true) 
+        {
+            BitmapData sourceData = 
+                       sourceBitmap.LockBits(new Rectangle(0, 0,
+                       sourceBitmap.Width, sourceBitmap.Height),
+                       ImageLockMode.ReadOnly, 
+                       PixelFormat.Format32bppArgb);
+
+            byte[] pixelBuffer = new byte[sourceData.Stride * 
+                                          sourceData.Height];
+
+            byte[] resultBuffer = new byte[sourceData.Stride * 
+                                           sourceData.Height];
+
+            Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, 
+                                       pixelBuffer.Length);
+
+            sourceBitmap.UnlockBits(sourceData);
+
+            if (grayscale == true)
+            {
+                float rgb = 0;
+
+                for (int k = 0; k < pixelBuffer.Length; k += 4)
+                {
+                    rgb = pixelBuffer[k] * 0.11f;
+                    rgb += pixelBuffer[k + 1] * 0.59f;
+                    rgb += pixelBuffer[k + 2] * 0.3f;
+
+
+                    pixelBuffer[k] = (byte)rgb;
+                    pixelBuffer[k + 1] = pixelBuffer[k];
+                    pixelBuffer[k + 2] = pixelBuffer[k];
+                    pixelBuffer[k + 3] = 255;
+                }
+            }
+
+            int filterOffset = (matrixSize - 1) / 2;
+            int calcOffset = 0;
+
+            int byteOffset = 0;
+
+            List<int> neighbourPixels = new List<int>();
+            byte[] middlePixel;
+
+            for (int offsetY = filterOffset; offsetY < 
+                sourceBitmap.Height - filterOffset; offsetY++)
+            {
+                for (int offsetX = filterOffset; offsetX < 
+                    sourceBitmap.Width - filterOffset; offsetX++)
+                {
+                    byteOffset = offsetY * 
+                                 sourceData.Stride + 
+                                 offsetX * 4;
+
+                    neighbourPixels.Clear();
+
+                    for (int filterY = -filterOffset; 
+                        filterY <= filterOffset; filterY++)
+                    {
+                        for (int filterX = -filterOffset;
+                            filterX <= filterOffset; filterX++)
+                        {
+
+                            calcOffset = byteOffset + 
+                                         (filterX * 4) + 
+                                         (filterY * sourceData.Stride);
+
+                            neighbourPixels.Add(BitConverter.ToInt32(
+                                             pixelBuffer, calcOffset));
+                        }
+                    }
+
+                    neighbourPixels.Sort();
+
+                    middlePixel = BitConverter.GetBytes(
+                                       neighbourPixels[filterOffset]);
+
+                    resultBuffer[byteOffset] = middlePixel[0];
+                    resultBuffer[byteOffset + 1] = middlePixel[1];
+                    resultBuffer[byteOffset + 2] = middlePixel[2];
+                    resultBuffer[byteOffset + 3] = middlePixel[3];
+                }
+            }
+
+            Bitmap resultBitmap = new Bitmap(sourceBitmap.Width, 
+                                             sourceBitmap.Height);
+
+            BitmapData resultData = 
+                       resultBitmap.LockBits(new Rectangle(0, 0,
+                       resultBitmap.Width, resultBitmap.Height),
+                       ImageLockMode.WriteOnly,
+                       PixelFormat.Format32bppArgb);
+
+            Marshal.Copy(resultBuffer, 0, resultData.Scan0, 
+                                       resultBuffer.Length);
+
+            resultBitmap.UnlockBits(resultData);
+
+            return resultBitmap;
+        }
+
+         public  Bitmap MeanFilter(Bitmap img,int matrixSize) { 
+
+         Color pixelColor;
+         for (int i = 0; i < img.Width; i++)
                 {
                     for (int j = 0; j < img.Height; j++)
                     {
                         int total = 0;
 
-                        if (this.comboBox2.SelectedIndex == 0)
+                        if (matrixSize == 3)
                         {
 
                             if (i - 1 >= 0 && j - 1 >= 0)
@@ -173,7 +326,7 @@ namespace VisionProject
                             img.SetPixel(i, j, Color.FromArgb(total / 9, total / 9, total / 9));
                         }
 
-                        if (this.comboBox2.SelectedIndex == 1)
+                        if (matrixSize == 5)
                         {
 
                             if (i - 1 >= 0 && j - 1 >= 0)
@@ -269,7 +422,7 @@ namespace VisionProject
                         }
 
 
-                        if (this.comboBox2.SelectedIndex == 2)
+                        if (matrixSize == 7)
                         {
 
                             if (i - 1 >= 0 && j - 1 >= 0)
@@ -408,7 +561,7 @@ namespace VisionProject
                             img.SetPixel(i, j, Color.FromArgb(total / 49, total / 49, total / 49));
                         }
 
-                        if (this.comboBox2.SelectedIndex == 3)
+                        if (matrixSize == 9)
                         {
 
                             if (i - 1 >= 0 && j - 1 >= 0)
@@ -590,17 +743,9 @@ namespace VisionProject
                         }
                     }
                 }
+             return img;
             }
-            this.pictureBox3.Image = img;
-        }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
-       
+     
     }
 }
