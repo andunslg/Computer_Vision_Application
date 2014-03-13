@@ -187,6 +187,7 @@ namespace VisionProject
             }
             else if (this.comboBox4.SelectedIndex == 1)
             {
+                this.pictureBox3.Image = RobertsEdgeDetection(sourceBitmap);
             }
             else if (this.comboBox4.SelectedIndex == 2)
             {
@@ -276,6 +277,41 @@ namespace VisionProject
             comparisonImage = ArithmeticBlend(grayImage, secondGrayImage, ColorCalculator.ColorCalculationType.Difference);
             this.pictureBox3.Image = comparisonImage;
             this.button9.Enabled = true;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.comboBox4.SelectedIndex == 3)
+            {
+                this.label3.Enabled = true;
+                this.label5.Enabled = true;
+                this.label6.Enabled = true;
+                this.label7.Enabled = true;
+
+                this.textBox1.Enabled = true;
+                this.textBox2.Enabled = true;
+                this.textBox3.Enabled = true;
+                this.textBox4.Enabled = true;
+            }
+            else
+            {
+                this.label3.Enabled = false;
+                this.label5.Enabled = false;
+                this.label6.Enabled = false;
+                this.label7.Enabled = false;
+
+                this.textBox1.Enabled = false;
+                this.textBox2.Enabled = false;
+                this.textBox3.Enabled = false;
+                this.textBox4.Enabled = false;
+            }
+
         }
 
 
@@ -1105,40 +1141,42 @@ namespace VisionProject
             return resultBitmap;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        public Bitmap RobertsEdgeDetection(Bitmap img)
         {
-        }
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.comboBox4.SelectedIndex == 3)
+            Bitmap result = new Bitmap(img);
+
+            for (int i = 0; i < img.Width; i++)
             {
-                this.label3.Enabled = true;
-                this.label5.Enabled = true;
-                this.label6.Enabled = true;
-                this.label7.Enabled = true;
+                for (int j = 0; j < img.Height; j++)
+                {
+                    if (i < img.Width - 1 && j < img.Height - 1)
+                    {
+                        Color pixelColor1 = img.GetPixel(i, j);
+                        Color pixelColor2 = img.GetPixel(i + 1, j);
+                        Color pixelColor4 = img.GetPixel(i + 1, j + 1);
+                        Color pixelColor3 = img.GetPixel(i, j + 1);
 
-                this.textBox1.Enabled = true;
-                this.textBox2.Enabled = true;
-                this.textBox3.Enabled = true;
-                this.textBox4.Enabled = true;
+                        int pixVal1 = Convert.ToInt16(pixelColor1.R);
+                        int pixVal2 = Convert.ToInt16(pixelColor2.R);
+                        int pixVal3 = Convert.ToInt16(pixelColor3.R);
+                        int pixVal4 = Convert.ToInt16(pixelColor4.R);
+
+                        int resultVal = Math.Abs(pixVal1 - pixVal4) + Math.Abs(pixVal2 - pixVal3);
+
+                        if (resultVal > 255)
+                        {
+                            resultVal = 255;
+                        }
+                        else if(resultVal < 0){
+                            resultVal = 0;
+                        }
+
+                        result.SetPixel(i, j, Color.FromArgb(resultVal, resultVal, resultVal));
+                    }
+
+                }
             }
-            else
-            {
-                this.label3.Enabled = false;
-                this.label5.Enabled = false;
-                this.label6.Enabled = false;
-                this.label7.Enabled = false;
-
-                this.textBox1.Enabled = false;
-                this.textBox2.Enabled = false;
-                this.textBox3.Enabled = false;
-                this.textBox4.Enabled = false;
-            }
-
+            return result;
         }
- 
     }
 }
