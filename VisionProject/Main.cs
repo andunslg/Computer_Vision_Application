@@ -171,6 +171,39 @@ namespace VisionProject
                 }
             }
 
+            else if (this.comboBox1.SelectedIndex == 2)
+            {
+                if (this.comboBox2.SelectedIndex == 0)
+                {
+                    if(this.checkBox1.Checked)
+                        this.pictureBox3.Image = MinMaxFilter(img, 3,true);
+                    else
+                        this.pictureBox3.Image = MinMaxFilter(img, 3, false);
+                }
+                else if (this.comboBox2.SelectedIndex == 1)
+                {
+                    if (this.checkBox1.Checked)
+                        this.pictureBox3.Image = MinMaxFilter(img, 5, true);
+                    else
+                        this.pictureBox3.Image = MinMaxFilter(img, 5, false);
+                }
+                else if (this.comboBox2.SelectedIndex == 2)
+                {
+                    if (this.checkBox1.Checked)
+                        this.pictureBox3.Image = MinMaxFilter(img, 7, true);
+                    else
+                        this.pictureBox3.Image = MinMaxFilter(img, 7, false);
+                }
+                else if (this.comboBox2.SelectedIndex == 3)
+                {
+                    if (this.checkBox1.Checked)
+                        this.pictureBox3.Image = MinMaxFilter(img, 9, true);
+                    else
+                        this.pictureBox3.Image = MinMaxFilter(img, 9, false);
+                }
+                
+            }
+
             this.button9.Visible = true;
         }
 
@@ -314,6 +347,18 @@ namespace VisionProject
 
         }
 
+        private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex == 2)
+            {
+                this.checkBox1.Enabled = true;
+            }
+            else
+            {
+                this.checkBox1.Enabled = false;
+            }
+
+        }
 
       /*  public Bitmap AlphaTrimmedMeanFilter(Bitmap sourceBitmap,int matrixSize,int alpha)
         {
@@ -1178,5 +1223,52 @@ namespace VisionProject
             }
             return result;
         }
+
+        public Bitmap MinMaxFilter(Bitmap img, int matrixSize, bool isMax)
+        {
+
+            Bitmap result = new Bitmap(img);
+
+            int max;
+            int min;
+
+            for (int i = 0; i < img.Width; i++)
+            {
+                for (int j = 0; j < img.Height; j++)
+                {
+                    Color pixelColor = img.GetPixel(i, j);
+                    int pixVal=Convert.ToInt16(pixelColor.R);
+                    max=pixVal;
+                    min = pixVal;
+                    for (int k = i - (matrixSize / 2); k < i + (matrixSize / 2); k++)
+                    {
+                        for (int l = j - (matrixSize / 2); l < j + (matrixSize / 2); l++)
+                        {
+                            if (k > 0 && l > 0 && k < img.Width && l < img.Height)
+                            {
+                                pixelColor = img.GetPixel(k, l);
+                                pixVal=Convert.ToInt16(pixelColor.R);
+                                if (max < pixVal)
+                                    max = pixVal;
+                                if (min > pixVal)
+                                    min = pixVal;
+                            }
+                        }
+                    }
+                    if (isMax)
+                    {
+                        result.SetPixel(i, j, Color.FromArgb(max, max, max));
+                    }
+                    else
+                    {
+                        result.SetPixel(i, j, Color.FromArgb(min, min, min));
+                    }
+
+                }
+            }
+
+            return result;
+        }
+
     }
 }

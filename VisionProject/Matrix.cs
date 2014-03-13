@@ -56,26 +56,5 @@ namespace VisionProject
                   { -1, -1, -1, }, };
             }
         }
-
-        public static double[,] Roberts2x2Horizontal
-        {
-            get
-            {
-                return new double[,] 
-                { { 1,  0, }, 
-                  { 0,  -1 }, };
-            }
-        }
-
-        public static double[,] Roberts2x2Vertical
-        {
-            get
-            {
-                return new double[,] 
-                { {  0, 1 }, 
-                  { -1, 0 } };
-            }
-        }
-
     }
 }
