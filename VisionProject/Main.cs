@@ -65,6 +65,7 @@ namespace VisionProject
             this.button3.Visible = true;
             this.button4.Visible = true;
             this.button5.Visible = true;
+            this.button8.Visible = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -150,20 +151,104 @@ namespace VisionProject
                 {
                     this.pictureBox3.Image = MedianFilter(img, 9);
                 }
+            }       
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Bitmap sourceBitmap = new Bitmap(grayImage);
+
+            if (this.comboBox4.SelectedIndex == 0)
+            {
+                this.pictureBox3.Image = ConvolutionFilter(sourceBitmap,
+                                                   Matrix.Sobel3x3Horizontal,
+                                                     Matrix.Sobel3x3Vertical,
+                                                          1.0, 0, true);
+            }
+            else if (this.comboBox4.SelectedIndex == 1)
+            {
+            }
+            else if (this.comboBox4.SelectedIndex == 2)
+            {
+                this.pictureBox3.Image = ConvolutionFilter(sourceBitmap,
+                                               Matrix.Prewitt3x3Horizontal,
+                                                 Matrix.Prewitt3x3Vertical,
+                                                        1.0, 0, true);
+            }
+            else if (this.comboBox4.SelectedIndex == 3)
+            {
+
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void button8_Click(object sender, EventArgs e)
         {
-        }
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
+            this.comboBox4.Visible = true;
+            this.comboBox4.SelectedIndex = 0;
+            this.label4.Visible = true;
+            this.button7.Visible = true;
         }
 
-        public  Bitmap MedianFilter(Bitmap sourceBitmap, 
-                                                int matrixSize,  
-                                                  int bias = 0, 
-                                         bool grayscale = true) 
+
+      /*  public Bitmap AlphaTrimmedMeanFilter(Bitmap sourceBitmap,int matrixSize,int alpha)
+        {
+            Bitmap result = new Bitmap(sourceBitmap);
+           
+            //   Start of the trimmed ordered set
+           int start = alpha;
+           //   End of the trimmed ordered set
+           int end = 9 - alpha;
+           //   Move window through all elements of the image
+           for (int m = 1; m < sourceBitmap.Width; ++m)
+           {
+              for (int n = 1; n < sourceBitmap.Height; ++n)
+              {
+                 //   Pick up window elements
+                 int k = 0;
+                 int [] window= new int[9];
+                 for (int j = m - 1; j < m + 2; ++j)
+                 {
+                     for (int i = n - 1; i < n + 2; ++i)
+                     {
+                         if (j > 0 && j < sourceBitmap.Width && i > 0 && i < sourceBitmap.Height)
+                         {
+                             Color pixelColor = sourceBitmap.GetPixel(j, i);
+                             window[k++] = Convert.ToInt16(pixelColor.R);
+                         }
+                     }
+                 }
+                 //   Order elements (only necessary part of them)
+                 for (int j = 0; j < end; ++j)
+                 {
+                    //   Find position of minimum element
+                    int min = j;
+                    for (int l = j + 1; l < 9; ++l)
+                    {
+                        if (window[l] < window[min])
+                            min = l;
+                    }
+                    //   Put found minimum element in its place
+                    int temp = window[j];
+                    window[j] = window[min];
+                    window[min] = temp;
+                 }
+
+                 //   Get result - the mean value of the elements in trimmed set
+                 result.SetPixel(n - 1, m - 1, Color.FromArgb(window[start], window[start], window[start]));
+                 for (int j = start + 1; j < end; ++j)
+                 {
+                     result.SetPixel(n - 1, m - 1, Color.FromArgb(window[j], window[j], window[j]));
+                 }
+                 Color pixelColor1 = sourceBitmap.GetPixel(n - 1, m - 1);
+                 int tempColor = Convert.ToInt16(pixelColor1.R)/9;
+                 result.SetPixel(n - 1, m - 1, Color.FromArgb(tempColor,tempColor,tempColor));
+         
+                }
+           }
+             return result;
+        }*/
+        
+        public  Bitmap MedianFilter(Bitmap sourceBitmap,int matrixSize,int bias = 0, bool grayscale = true) 
         {
             BitmapData sourceData = 
                        sourceBitmap.LockBits(new Rectangle(0, 0,
@@ -265,7 +350,7 @@ namespace VisionProject
             return resultBitmap;
         }
 
-         public  Bitmap MeanFilter(Bitmap img,int matrixSize) { 
+        public  Bitmap MeanFilter(Bitmap img,int matrixSize) { 
 
          Color pixelColor;
          for (int i = 0; i < img.Width; i++)
@@ -744,8 +829,158 @@ namespace VisionProject
                     }
                 }
              return img;
+            }      
+
+        public Bitmap ConvolutionFilter(Bitmap sourceBitmap,
+                                              double[,] xFilterMatrix,
+                                              double[,] yFilterMatrix,
+                                                    double factor = 1,
+                                                         int bias = 0,
+                                               bool grayscale = false)
+        {
+            BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0,
+                                     sourceBitmap.Width, sourceBitmap.Height),
+                                                       ImageLockMode.ReadOnly,
+                                                  PixelFormat.Format32bppArgb);
+
+            byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
+            byte[] resultBuffer = new byte[sourceData.Stride * sourceData.Height];
+
+            Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
+            sourceBitmap.UnlockBits(sourceData);
+
+            if (grayscale == true)
+            {
+                float rgb = 0;
+
+                for (int k = 0; k < pixelBuffer.Length; k += 4)
+                {
+                    rgb = pixelBuffer[k] * 0.11f;
+                    rgb += pixelBuffer[k + 1] * 0.59f;
+                    rgb += pixelBuffer[k + 2] * 0.3f;
+
+                    pixelBuffer[k] = (byte)rgb;
+                    pixelBuffer[k + 1] = pixelBuffer[k];
+                    pixelBuffer[k + 2] = pixelBuffer[k];
+                    pixelBuffer[k + 3] = 255;
+                }
             }
 
-     
+            double blueX = 0.0;
+            double greenX = 0.0;
+            double redX = 0.0;
+
+            double blueY = 0.0;
+            double greenY = 0.0;
+            double redY = 0.0;
+
+            double blueTotal = 0.0;
+            double greenTotal = 0.0;
+            double redTotal = 0.0;
+
+            int filterOffset = 1;
+            int calcOffset = 0;
+
+            int byteOffset = 0;
+
+            for (int offsetY = filterOffset; offsetY <
+                sourceBitmap.Height - filterOffset; offsetY++)
+            {
+                for (int offsetX = filterOffset; offsetX <
+                    sourceBitmap.Width - filterOffset; offsetX++)
+                {
+                    blueX = greenX = redX = 0;
+                    blueY = greenY = redY = 0;
+
+                    blueTotal = greenTotal = redTotal = 0.0;
+
+                    byteOffset = offsetY *
+                                 sourceData.Stride +
+                                 offsetX * 4;
+
+                    for (int filterY = -filterOffset;
+                        filterY <= filterOffset; filterY++)
+                    {
+                        for (int filterX = -filterOffset;
+                            filterX <= filterOffset; filterX++)
+                        {
+                            calcOffset = byteOffset +
+                                         (filterX * 4) +
+                                         (filterY * sourceData.Stride);
+
+                            blueX += (double)(pixelBuffer[calcOffset]) *
+                                      xFilterMatrix[filterY + filterOffset,
+                                              filterX + filterOffset];
+
+                            greenX += (double)(pixelBuffer[calcOffset + 1]) *
+                                      xFilterMatrix[filterY + filterOffset,
+                                              filterX + filterOffset];
+
+                            redX += (double)(pixelBuffer[calcOffset + 2]) *
+                                      xFilterMatrix[filterY + filterOffset,
+                                              filterX + filterOffset];
+
+                            blueY += (double)(pixelBuffer[calcOffset]) *
+                                      yFilterMatrix[filterY + filterOffset,
+                                              filterX + filterOffset];
+
+                            greenY += (double)(pixelBuffer[calcOffset + 1]) *
+                                      yFilterMatrix[filterY + filterOffset,
+                                              filterX + filterOffset];
+
+                            redY += (double)(pixelBuffer[calcOffset + 2]) *
+                                      yFilterMatrix[filterY + filterOffset,
+                                              filterX + filterOffset];
+                        }
+                    }
+
+                    blueTotal = Math.Sqrt((blueX * blueX) + (blueY * blueY));
+                    greenTotal = Math.Sqrt((greenX * greenX) + (greenY * greenY));
+                    redTotal = Math.Sqrt((redX * redX) + (redY * redY));
+
+                    if (blueTotal > 255)
+                    { blueTotal = 255; }
+                    else if (blueTotal < 0)
+                    { blueTotal = 0; }
+
+                    if (greenTotal > 255)
+                    { greenTotal = 255; }
+                    else if (greenTotal < 0)
+                    { greenTotal = 0; }
+
+                    if (redTotal > 255)
+                    { redTotal = 255; }
+                    else if (redTotal < 0)
+                    { redTotal = 0; }
+
+                    resultBuffer[byteOffset] = (byte)(blueTotal);
+                    resultBuffer[byteOffset + 1] = (byte)(greenTotal);
+                    resultBuffer[byteOffset + 2] = (byte)(redTotal);
+                    resultBuffer[byteOffset + 3] = 255;
+                }
+            }
+
+            Bitmap resultBitmap = new Bitmap(sourceBitmap.Width, sourceBitmap.Height);
+
+            BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0,
+                                     resultBitmap.Width, resultBitmap.Height),
+                                                      ImageLockMode.WriteOnly,
+                                                  PixelFormat.Format32bppArgb);
+
+            Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
+            resultBitmap.UnlockBits(resultData);
+
+            return resultBitmap;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
     }
 }
