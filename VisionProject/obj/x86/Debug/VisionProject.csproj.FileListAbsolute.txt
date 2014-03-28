@@ -14,3 +14,7 @@ C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_V
 C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.csprojResolveAssemblyReference.cache
 C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.Main.resources
 C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.HistogramaDesenat.resources
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\bin\Debug\VisionProject.exe.manifest
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\bin\Debug\VisionProject.application
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.exe.manifest
+C:\Users\AndunSLG\Documents\Visual Studio 2010\Projects\VisionProject\Computer_Vision_Application\VisionProject\obj\x86\Debug\VisionProject.application
